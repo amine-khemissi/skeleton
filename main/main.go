@@ -10,6 +10,13 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
+/* todo :
+- add gorilla mux
+- add middle ware chaining
+- add logger chain
+- add interface handler
+- add doc generation
+*/
 func main() {
 	svc := endpoints.New()
 
