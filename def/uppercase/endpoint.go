@@ -1,4 +1,4 @@
-package upperCase
+package uppercase
 
 type Request struct {
 	Value string `json:"value"`
