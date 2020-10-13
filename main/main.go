@@ -8,6 +8,7 @@ import (
 	"github.com/amine-khemissi/skeleton/endpoints/count/transportCount"
 	"github.com/amine-khemissi/skeleton/endpoints/uppercase/transportUpperCase"
 	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/gorilla/mux"
 )
 
 /* todo :
@@ -19,21 +20,22 @@ import (
 */
 func main() {
 	svc := endpoints.New()
+	r := mux.NewRouter()
+	http.Handle("/", r)
 
 	uppercaseHandler := httptransport.NewServer(
 		transportUpperCase.MakeEndpoint(svc),
 		transportUpperCase.DecodeRequest,
 		transportUpperCase.EncodeResponse,
 	)
-
-	http.Handle(transportUpperCase.GetPath(), uppercaseHandler)
+	r.Path(transportUpperCase.GetPath()).Methods(transportUpperCase.GetVerb()).Handler(uppercaseHandler)
 
 	countHandler := httptransport.NewServer(
 		transportCount.MakeEndpoint(svc),
 		transportCount.DecodeRequest,
 		transportCount.EncodeResponse,
 	)
+	r.Path(transportCount.GetPath()).Methods(transportCount.GetVerb()).Handler(countHandler)
 
-	http.Handle(transportCount.GetPath(), countHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
