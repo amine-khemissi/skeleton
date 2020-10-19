@@ -62,6 +62,7 @@ func SetLevel(level Level) Option {
 	}
 }
 func SetDst(dst string) Option {
+	//todo : dst should be able to handle tcp/htt[ stream in addition to file system output
 	return func(l *logger) {
 		f, err := os.Open(dst)
 		if err != nil {
@@ -81,6 +82,9 @@ func Instance() Logger {
 }
 
 func New(opts ...Option) Logger {
+
+	// todo: New should not be exported, it should be configured at starting phase
+	// todo : add timestamp and additional ctx values
 	gLogger := &logger{
 		min: Debug,
 		dst: nil,
