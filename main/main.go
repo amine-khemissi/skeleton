@@ -11,9 +11,11 @@ import (
 )
 
 /* todo :
+- check other todos
 - add middle ware chaining
-- add logger chain
 - add doc generation
+- add db driver
+- add conf handle
 */
 
 func main() {
