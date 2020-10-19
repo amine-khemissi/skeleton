@@ -2,7 +2,6 @@ package transportCount
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
 	"github.com/amine-khemissi/skeleton/backbone/endpointimpl"
@@ -20,22 +19,15 @@ func NewEndpoint() endpointimpl.EndpointImpl {
 }
 func (e ep) MakeEndpoint(svc interface{}) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(count.Request)
-		return svc.(def.Service).Count(ctx, req)
+		req := request.(*count.Request)
+		return svc.(def.Service).Count(ctx, *req)
 	}
 }
 
-func (e ep) DecodeRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request count.Request
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		return nil, err
-	}
-	return request, nil
+func (e ep) GetRequest() interface{} {
+	return &count.Request{}
 }
 
-func (e ep) EncodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
-}
 func (e ep) GetVerb() string {
 	return http.MethodGet
 }

@@ -1,8 +1,12 @@
 package server
 
 import (
+	"context"
+	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/amine-khemissi/skeleton/backbone/transport"
 
 	"github.com/amine-khemissi/skeleton/backbone/endpointimpl"
 	httptransport "github.com/go-kit/kit/transport/http"
@@ -31,8 +35,14 @@ type srv struct {
 func (s *srv) Register(impl endpointimpl.EndpointImpl) {
 	implHandler := httptransport.NewServer(
 		impl.MakeEndpoint(s.svc),
-		impl.DecodeRequest,
-		impl.EncodeResponse,
+		transport.DecodeRequest(impl.GetRequest()),
+		func(_ context.Context, w http.ResponseWriter, response interface{}) error {
+			return json.NewEncoder(w).Encode(response)
+		},
+		httptransport.ServerErrorEncoder(func(ctx context.Context, err error, w http.ResponseWriter) {
+			bts, _ := json.Marshal(err)
+			w.Write(bts)
+		}),
 	)
 	s.r.Methods(impl.GetVerb()).Path(impl.GetPath()).Handler(implHandler)
 }
