@@ -11,11 +11,11 @@ import (
 )
 
 /* todo :
+- add in request context request ID and print it in logger
 - check other todos
-- add middle ware chaining
+- add middleware chaining
 - add doc generation
 - add db driver
-- add conf handle
 */
 
 func main() {

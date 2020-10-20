@@ -6,7 +6,14 @@ import (
 	"io"
 	"os"
 	"sync"
+	"time"
+
+	"github.com/amine-khemissi/skeleton/backbone/config"
 )
+
+func init() {
+	go reloadLogger(&lock)
+}
 
 var gLogger Logger
 
@@ -17,6 +24,7 @@ type Logger interface {
 	Info(ctx context.Context, args ...interface{})
 	Warn(ctx context.Context, args ...interface{})
 	Error(ctx context.Context, args ...interface{})
+	init()
 }
 type Level int
 
@@ -27,9 +35,34 @@ const (
 	Error
 )
 
+var str2Level = map[string]Level{
+	"debug":   Debug,
+	"info":    Info,
+	"warning": Warn,
+	"error":   Error,
+}
+
+func (l Level) ToString() string {
+	for k, v := range str2Level {
+		if v == l {
+			return k
+		}
+	}
+	return ""
+}
+
+const (
+	moduleName     = "logger"
+	levelKey       = "level"
+	destinationKey = "destination"
+)
+
 type logger struct {
-	min Level
-	dst io.Writer
+	min     Level
+	dstName string
+	dst     io.Writer
+	release func()
+	l       *sync.Mutex
 }
 
 func (l *logger) Debug(ctx context.Context, args ...interface{}) {
@@ -51,49 +84,68 @@ func (l *logger) log(ctx context.Context, level Level, args []interface{}) {
 	if l.min > level {
 		return
 	}
-	l.dst.Write([]byte(fmt.Sprintln(args...)))
-}
-
-type Option func(l *logger)
-
-func SetLevel(level Level) Option {
-	return func(l *logger) {
-		l.min = level
-	}
-}
-func SetDst(dst string) Option {
-	//todo : dst should be able to handle tcp/htt[ stream in addition to file system output
-	return func(l *logger) {
-		f, err := os.Open(dst)
-		if err != nil {
-			panic(err)
-		}
-		l.dst = f
-	}
+	l.dst.Write([]byte(fmt.Sprint("[", time.Now().UTC(), "][", level.ToString(), "]") + fmt.Sprintln(args...)))
 }
 
 func Instance() Logger {
 	lock.Lock()
 	defer lock.Unlock()
 	if gLogger == nil {
-		gLogger = New()
+		gLogger = loadLogger(&lock)
+		gLogger.init()
 	}
 	return gLogger
 }
+func loadLogger(l *sync.Mutex) *logger {
 
-func New(opts ...Option) Logger {
+	logLevelStr, isString := config.Instance().Get(moduleName, levelKey).(string)
+	if !isString {
+		panic(fmt.Sprintln("expected", moduleName, "::", levelKey, "to be a string"))
+	}
+	logLevel, isLevel := str2Level[logLevelStr]
+	if !isLevel {
+		panic(fmt.Sprintln("unknown", moduleName, "::", levelKey, "value:", logLevelStr))
+	}
+	logDst, isString := config.Instance().Get(moduleName, destinationKey).(string)
+	if !isString {
+		panic(fmt.Sprintln("expected", moduleName, "::", destinationKey, "to be a string"))
+	}
+	tmpLogger := &logger{
+		min:     logLevel,
+		dstName: logDst,
+		l:       l,
+	}
 
-	// todo: New should not be exported, it should be configured at starting phase
-	// todo : add timestamp and additional ctx values
-	gLogger := &logger{
-		min: Debug,
-		dst: nil,
+	return tmpLogger
+}
+
+func (l *logger) init() {
+	f, err := os.OpenFile(l.dstName,
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		0644)
+	if err != nil {
+		panic(err)
 	}
-	for _, opt := range opts {
-		opt(gLogger)
+	l.dst = f
+	l.release = func() {
+		f.Close()
 	}
-	if gLogger.dst == nil {
-		gLogger.dst = os.Stdout
+}
+func reloadLogger(l *sync.Mutex) {
+
+	for {
+		time.Sleep(3 * time.Second)
+
+		tmpLogger := loadLogger(l)
+		if gLogger != nil &&
+			gLogger.(*logger).dstName == tmpLogger.dstName &&
+			gLogger.(*logger).min == tmpLogger.min {
+			continue
+		}
+		tmpLogger.init()
+		lock.Lock()
+		gLogger.(*logger).release()
+		gLogger = tmpLogger
+		lock.Unlock()
 	}
-	return gLogger
 }
