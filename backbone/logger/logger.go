@@ -24,6 +24,7 @@ type Logger interface {
 	Info(ctx context.Context, args ...interface{})
 	Warn(ctx context.Context, args ...interface{})
 	Error(ctx context.Context, args ...interface{})
+	Fatal(ctx context.Context, args ...interface{})
 	init()
 }
 type Level int
@@ -31,15 +32,17 @@ type Level int
 const (
 	Debug Level = iota
 	Info
-	Warn
+	Warning
 	Error
+	Fatal
 )
 
 var str2Level = map[string]Level{
 	"debug":   Debug,
 	"info":    Info,
-	"warning": Warn,
+	"warning": Warning,
 	"error":   Error,
+	"fatal":   Fatal,
 }
 
 func (l Level) ToString() string {
@@ -72,10 +75,13 @@ func (l *logger) Info(ctx context.Context, args ...interface{}) {
 	l.log(ctx, Info, args)
 }
 func (l *logger) Warn(ctx context.Context, args ...interface{}) {
-	l.log(ctx, Warn, args)
+	l.log(ctx, Warning, args)
 }
 func (l *logger) Error(ctx context.Context, args ...interface{}) {
 	l.log(ctx, Error, args)
+}
+func (l *logger) Fatal(ctx context.Context, args ...interface{}) {
+	l.log(ctx, Fatal, args)
 }
 
 func (l *logger) log(ctx context.Context, level Level, args []interface{}) {
@@ -84,7 +90,11 @@ func (l *logger) log(ctx context.Context, level Level, args []interface{}) {
 	if l.min > level {
 		return
 	}
-	l.dst.Write([]byte(fmt.Sprint("[", time.Now().UTC(), "][", level.ToString(), "]") + fmt.Sprintln(args...)))
+	content := fmt.Sprint("[", time.Now().UTC(), "][", level.ToString(), "]") + fmt.Sprintln(args...)
+	l.dst.Write([]byte(content))
+	if level == Fatal {
+		panic(content)
+	}
 }
 
 func Instance() Logger {
