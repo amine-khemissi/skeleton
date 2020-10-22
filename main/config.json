@@ -1,0 +1,8 @@
+{
+	"logger":
+	{
+		"level":"debug",
+		"destination":"out2.txt"
+
+	}
+}
