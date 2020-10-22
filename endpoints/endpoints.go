@@ -3,6 +3,9 @@ package endpoints
 import (
 	"context"
 
+	"github.com/amine-khemissi/skeleton/backbone/db"
+	"github.com/amine-khemissi/skeleton/backbone/db/mongo"
+
 	"github.com/amine-khemissi/skeleton/def"
 	"github.com/amine-khemissi/skeleton/def/count"
 	"github.com/amine-khemissi/skeleton/def/uppercase"
@@ -11,8 +14,10 @@ import (
 )
 
 type stringService struct {
+	DBInstance db.DB
 }
 
+//todo : modify or add endpoint that select or insert on the DB in order to test it
 func (stringService) Uppercase(ctx context.Context, req uppercase.Request) (uppercase.Response, error) {
 	return upperCase2.Uppercase(ctx, req)
 }
@@ -20,6 +25,8 @@ func (stringService) Count(ctx context.Context, req count.Request) (count.Respon
 	return count2.Count(ctx, req)
 }
 
-func New() def.Service {
-	return stringService{}
+func New(ctx context.Context) def.Service {
+	return stringService{
+		DBInstance: mongo.New(ctx),
+	}
 }

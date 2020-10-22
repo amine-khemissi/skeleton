@@ -19,8 +19,9 @@ import (
 */
 
 func main() {
-	logger.Instance().Debug(context.Background(), "test one")
-	srv := server.New(endpoints.New())
+	ctx := context.Background()
+	logger.Instance().Debug(ctx, "starting service")
+	srv := server.New(endpoints.New(ctx))
 	srv.Register(transportUpperCase.NewEndpoint())
 	srv.Register(transportCount.NewEndpoint())
 	srv.Run()

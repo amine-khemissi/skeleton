@@ -2,8 +2,6 @@ package mongo
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/amine-khemissi/skeleton/backbone/config"
@@ -13,11 +11,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-)
-
-const (
-	uriKey  = "HTTP"
-	nameKey = "databaseName"
 )
 
 type mongoConf struct {
@@ -46,10 +39,10 @@ func New(ctx context.Context) db.DB {
 
 	// Check the connection
 	if err = client.Ping(ctx, nil); err != nil {
-		log.Fatal(err)
+		logger.Instance().Fatal(ctx, err)
 	}
 
-	fmt.Println("Connected to MongoDB!")
+	logger.Instance().Info(ctx, "Connected to mongo:", conf.URI)
 	return &wrapper{
 		db: client.Database("some db"),
 	}
