@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+  mongodb:
+    image: 'mongo:4.4'
+    container_name: 'mongodb'
+    ports:
+      - "27017-27019:27017-27019"
+
+  web:
+    build: .
+    container_name: 'skeleton'
+#    command: /app/svc
+    volumes:
+      - ./conf/config.json:/app/config.json
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+

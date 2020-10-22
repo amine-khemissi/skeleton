@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -15,10 +16,11 @@ type Config interface {
 }
 
 func init() {
+	configFile = flag.String("config-file", "config.json", "path to config file")
 	go reloadConf(&locker)
 }
 
-const configFile = "./config.json"
+var configFile *string
 
 var gConf Config
 var locker sync.Mutex
@@ -54,7 +56,7 @@ func Instance() Config {
 
 func (c config) isExpired() bool {
 
-	fi, err := os.Stat(configFile)
+	fi, err := os.Stat(*configFile)
 	if err != nil {
 		panic(err)
 	}
@@ -70,7 +72,7 @@ func loadConf(l *sync.Mutex) Config {
 	tmp := &config{
 		l: l,
 	}
-	bts, err := ioutil.ReadFile(configFile)
+	bts, err := ioutil.ReadFile(*configFile)
 	if err != nil {
 		panic(err)
 	}

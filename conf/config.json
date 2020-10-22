@@ -1,0 +1,13 @@
+{
+	"logger":
+	{
+		"level":"debug",
+		"destination":"out2.txt"
+	},
+	"database": {
+		"mongo": {
+			"URI": "mongodb://mongodb:27017",
+			"name": "dummy"
+		}
+	}
+}

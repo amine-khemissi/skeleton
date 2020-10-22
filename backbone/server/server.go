@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"log"
 	"net/http"
 
@@ -18,6 +19,9 @@ type Server interface {
 	Register(impl endpointimpl.EndpointImpl)
 }
 
+func init() {
+	flag.Parse()
+}
 func New(svc interface{}) Server {
 	s := &srv{
 		r:   mux.NewRouter(),

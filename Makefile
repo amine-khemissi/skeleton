@@ -1,2 +1,2 @@
 build:
-	@go build -o bin/app main/main.go
+	@CGO_ENABLED=0 go build -o bin/svc main/main.go

@@ -44,7 +44,7 @@ func New(ctx context.Context) db.DB {
 
 	logger.Instance().Info(ctx, "Connected to mongo:", conf.URI)
 	return &wrapper{
-		db: client.Database("some db"),
+		db: client.Database(conf.DatabaseName),
 	}
 }
 
