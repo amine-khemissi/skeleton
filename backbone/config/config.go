@@ -61,7 +61,6 @@ func (c config) isExpired() bool {
 		panic(err)
 	}
 	if c.lastUpdate.After(fi.ModTime()) {
-		fmt.Println("conf up to date")
 		return false
 	}
 	return true

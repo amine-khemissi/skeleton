@@ -8,6 +8,7 @@ import (
 	"github.com/amine-khemissi/skeleton/endpoints"
 	"github.com/amine-khemissi/skeleton/endpoints/count/transportCount"
 	"github.com/amine-khemissi/skeleton/endpoints/uppercase/transportUpperCase"
+	transportwrite "github.com/amine-khemissi/skeleton/endpoints/write/transport"
 )
 
 /* todo :
@@ -15,7 +16,8 @@ import (
 - check other todos
 - add middleware chaining
 - add doc generation
-- add db driver
+- db driver : check other methods are working
+- err response encoder to be implemented
 */
 
 func main() {
@@ -24,5 +26,6 @@ func main() {
 	srv := server.New(endpoints.New(ctx))
 	srv.Register(transportUpperCase.NewEndpoint())
 	srv.Register(transportCount.NewEndpoint())
+	srv.Register(transportwrite.NewEndpoint())
 	srv.Run()
 }

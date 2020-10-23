@@ -15,7 +15,7 @@ import (
 
 type mongoConf struct {
 	URI          string `json:"URI"`
-	DatabaseName string `json:"name"`
+	DatabaseName string `json:"databaseName"`
 }
 
 func New(ctx context.Context) db.DB {
@@ -23,6 +23,7 @@ func New(ctx context.Context) db.DB {
 	if !isMSI {
 		logger.Instance().Fatal(ctx, "failed to parse mongo conf, reason: expected json object")
 	}
+	logger.Instance().Debug(ctx, "extracted mongo conf", tmp)
 	var conf mongoConf
 	if err := mapstructure.Decode(tmp, &conf); err != nil {
 		logger.Instance().Fatal(ctx, "failed to parse mongo conf, reason:", err.Error())
@@ -42,7 +43,7 @@ func New(ctx context.Context) db.DB {
 		logger.Instance().Fatal(ctx, err)
 	}
 
-	logger.Instance().Info(ctx, "Connected to mongo:", conf.URI)
+	logger.Instance().Info(ctx, "Connected to mongo:", conf.URI, ",database:", conf.DatabaseName)
 	return &wrapper{
 		db: client.Database(conf.DatabaseName),
 	}

@@ -4,6 +4,8 @@ services:
   mongodb:
     image: 'mongo:4.4'
     container_name: 'mongodb'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
     ports:
       - "27017-27019:27017-27019"
 
@@ -17,4 +19,12 @@ services:
       - "8080:8080"
     depends_on:
       - mongodb
+
+  testsvc:
+    image: centos
+    container_name: testsvc
+    depends_on:
+      - mongodb
+    command: sleep 1000
+
 

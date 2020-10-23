@@ -3,6 +3,9 @@ package endpoints
 import (
 	"context"
 
+	"github.com/amine-khemissi/skeleton/def/write"
+	write2 "github.com/amine-khemissi/skeleton/endpoints/write"
+
 	"github.com/amine-khemissi/skeleton/backbone/db"
 	"github.com/amine-khemissi/skeleton/backbone/db/mongo"
 
@@ -18,15 +21,19 @@ type stringService struct {
 }
 
 //todo : modify or add endpoint that select or insert on the DB in order to test it
-func (stringService) Uppercase(ctx context.Context, req uppercase.Request) (uppercase.Response, error) {
+func (s *stringService) Uppercase(ctx context.Context, req uppercase.Request) (uppercase.Response, error) {
 	return upperCase2.Uppercase(ctx, req)
 }
-func (stringService) Count(ctx context.Context, req count.Request) (count.Response, error) {
+func (s *stringService) Count(ctx context.Context, req count.Request) (count.Response, error) {
 	return count2.Count(ctx, req)
 }
 
+func (s *stringService) Write(ctx context.Context, req write.Request) (write.Response, error) {
+	return write2.Write(ctx, s.DBInstance, req)
+}
+
 func New(ctx context.Context) def.Service {
-	return stringService{
+	return &stringService{
 		DBInstance: mongo.New(ctx),
 	}
 }
