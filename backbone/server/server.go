@@ -1,15 +1,12 @@
 package server
 
 import (
-	"context"
-	"encoding/json"
 	"flag"
 	"log"
 	"net/http"
 
-	"github.com/amine-khemissi/skeleton/backbone/transport"
-
 	"github.com/amine-khemissi/skeleton/backbone/endpointimpl"
+	"github.com/amine-khemissi/skeleton/backbone/transport"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 )
@@ -40,16 +37,13 @@ func (s *srv) Register(impl endpointimpl.EndpointImpl) {
 	implHandler := httptransport.NewServer(
 		impl.MakeEndpoint(s.svc),
 		transport.DecodeRequest(impl.GetRequest()),
-		func(_ context.Context, w http.ResponseWriter, response interface{}) error {
-			return json.NewEncoder(w).Encode(response)
-		},
-		httptransport.ServerErrorEncoder(func(ctx context.Context, err error, w http.ResponseWriter) {
-			bts, _ := json.Marshal(err)
-			w.Write(bts)
-		}),
+		genericEncoder,
+		httptransport.ServerErrorEncoder(genericErrorEncoder),
+		httptransport.ServerBefore(addContextID),
 	)
 	s.r.Methods(impl.GetVerb()).Path(impl.GetPath()).Handler(implHandler)
 }
+
 func (s *srv) Run() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
