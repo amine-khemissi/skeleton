@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/amine-khemissi/skeleton/backbone/config"
+
 	"github.com/amine-khemissi/skeleton/backbone/endpointimpl"
 	"github.com/amine-khemissi/skeleton/backbone/transport"
 	httptransport "github.com/go-kit/kit/transport/http"
@@ -24,7 +26,9 @@ func New(svc interface{}) Server {
 		r:   mux.NewRouter(),
 		svc: svc,
 	}
+
 	http.Handle("/", s.r)
+	s.Register(config.NewEndpoint())
 	return s
 }
 
