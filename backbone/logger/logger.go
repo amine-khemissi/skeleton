@@ -8,6 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/amine-khemissi/skeleton/backbone/header"
+
 	"github.com/amine-khemissi/skeleton/backbone/config"
 )
 
@@ -90,7 +92,8 @@ func (l *logger) log(ctx context.Context, level Level, args []interface{}) {
 	if l.min > level {
 		return
 	}
-	content := fmt.Sprint("[", time.Now().UTC(), "][", level.ToString(), "]") + fmt.Sprintln(args...)
+
+	content := fmt.Sprint("[", header.Get(ctx, header.ContextID), "]", "[", time.Now().UTC(), "][", level.ToString(), "]") + fmt.Sprintln(args...)
 	l.dst.Write([]byte(content))
 	if level == Fatal {
 		panic(content)

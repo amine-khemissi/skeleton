@@ -16,7 +16,8 @@ type Request struct {
 }
 
 func (e ep) GetRequest() interface{} {
-	return nil
+	return &struct {
+	}{}
 }
 
 func NewEndpoint() endpointimpl.EndpointImpl {
