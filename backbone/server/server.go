@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/amine-khemissi/skeleton/backbone/config"
-
 	"github.com/amine-khemissi/skeleton/backbone/endpointimpl"
 	"github.com/amine-khemissi/skeleton/backbone/transport"
 	httptransport "github.com/go-kit/kit/transport/http"

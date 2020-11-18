@@ -17,6 +17,7 @@ func Write(ctx context.Context, instance db.DB, req write.Request) (write.Respon
 
 	hash := fmt.Sprintf("%x", md5.Sum([]byte(req.Name+strconv.Itoa(req.Age))))
 	item := map[string]interface{}{
+		"ID":   hash,
 		"name": req.Name,
 		"age":  req.Age,
 	}

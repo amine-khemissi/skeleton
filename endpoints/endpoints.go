@@ -3,6 +3,10 @@ package endpoints
 import (
 	"context"
 
+	read2 "github.com/amine-khemissi/skeleton/endpoints/read"
+
+	"github.com/amine-khemissi/skeleton/def/read"
+
 	"github.com/amine-khemissi/skeleton/def/write"
 	write2 "github.com/amine-khemissi/skeleton/endpoints/write"
 
@@ -30,6 +34,10 @@ func (s *stringService) Count(ctx context.Context, req count.Request) (count.Res
 
 func (s *stringService) Write(ctx context.Context, req write.Request) (write.Response, error) {
 	return write2.Write(ctx, s.DBInstance, req)
+}
+
+func (s *stringService) Read(ctx context.Context, req read.Request) (read.Response, error) {
+	return read2.Read(ctx, s.DBInstance, req)
 }
 
 func New(ctx context.Context) def.Service {
