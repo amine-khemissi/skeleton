@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 
+	transportdelete "github.com/amine-khemissi/skeleton/endpoints/delete/transport"
+
 	transportread "github.com/amine-khemissi/skeleton/endpoints/read/transport"
 
 	"github.com/amine-khemissi/skeleton/backbone/logger"
@@ -30,5 +32,6 @@ func main() {
 	srv.Register(transportCount.NewEndpoint())
 	srv.Register(transportwrite.NewEndpoint())
 	srv.Register(transportread.NewEndpoint())
+	srv.Register(transportdelete.NewEndpoint())
 	srv.Run()
 }

@@ -3,21 +3,19 @@ package endpoints
 import (
 	"context"
 
-	read2 "github.com/amine-khemissi/skeleton/endpoints/read"
-
-	"github.com/amine-khemissi/skeleton/def/read"
-
-	"github.com/amine-khemissi/skeleton/def/write"
-	write2 "github.com/amine-khemissi/skeleton/endpoints/write"
-
 	"github.com/amine-khemissi/skeleton/backbone/db"
 	"github.com/amine-khemissi/skeleton/backbone/db/mongo"
-
 	"github.com/amine-khemissi/skeleton/def"
 	"github.com/amine-khemissi/skeleton/def/count"
+	"github.com/amine-khemissi/skeleton/def/delete"
+	"github.com/amine-khemissi/skeleton/def/read"
 	"github.com/amine-khemissi/skeleton/def/uppercase"
+	"github.com/amine-khemissi/skeleton/def/write"
 	count2 "github.com/amine-khemissi/skeleton/endpoints/count"
+	delete2 "github.com/amine-khemissi/skeleton/endpoints/delete"
+	read2 "github.com/amine-khemissi/skeleton/endpoints/read"
 	upperCase2 "github.com/amine-khemissi/skeleton/endpoints/uppercase"
+	write2 "github.com/amine-khemissi/skeleton/endpoints/write"
 )
 
 type stringService struct {
@@ -38,6 +36,10 @@ func (s *stringService) Write(ctx context.Context, req write.Request) (write.Res
 
 func (s *stringService) Read(ctx context.Context, req read.Request) (read.Response, error) {
 	return read2.Read(ctx, s.DBInstance, req)
+}
+
+func (s *stringService) Delete(ctx context.Context, req delete.Request) (delete.Response, error) {
+	return delete2.Delete(ctx, s.DBInstance, req)
 }
 
 func New(ctx context.Context) def.Service {
