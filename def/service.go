@@ -3,17 +3,13 @@ package def
 import (
 	"context"
 
-	"github.com/amine-khemissi/skeleton/def/count"
 	"github.com/amine-khemissi/skeleton/def/delete"
 	"github.com/amine-khemissi/skeleton/def/read"
 	"github.com/amine-khemissi/skeleton/def/update"
-	"github.com/amine-khemissi/skeleton/def/uppercase"
 	"github.com/amine-khemissi/skeleton/def/write"
 )
 
 type Service interface {
-	Uppercase(ctx context.Context, req uppercase.Request) (uppercase.Response, error)
-	Count(ctx context.Context, req count.Request) (count.Response, error)
 	Write(ctx context.Context, req write.Request) (write.Response, error)
 	Update(ctx context.Context, req update.Request) (update.Response, error)
 	Read(ctx context.Context, req read.Request) (read.Response, error)

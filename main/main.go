@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 
+	transportupdate "github.com/amine-khemissi/skeleton/endpoints/update/transport"
+
 	transportdelete "github.com/amine-khemissi/skeleton/endpoints/delete/transport"
 
 	transportread "github.com/amine-khemissi/skeleton/endpoints/read/transport"
@@ -10,8 +12,6 @@ import (
 	"github.com/amine-khemissi/skeleton/backbone/logger"
 	"github.com/amine-khemissi/skeleton/backbone/server"
 	"github.com/amine-khemissi/skeleton/endpoints"
-	"github.com/amine-khemissi/skeleton/endpoints/count/transportCount"
-	"github.com/amine-khemissi/skeleton/endpoints/uppercase/transportUpperCase"
 	transportwrite "github.com/amine-khemissi/skeleton/endpoints/write/transport"
 )
 
@@ -28,10 +28,9 @@ func main() {
 	ctx := context.Background()
 	logger.Instance().Debug(ctx, "starting service")
 	srv := server.New(endpoints.New(ctx))
-	srv.Register(transportUpperCase.NewEndpoint())
-	srv.Register(transportCount.NewEndpoint())
 	srv.Register(transportwrite.NewEndpoint())
 	srv.Register(transportread.NewEndpoint())
 	srv.Register(transportdelete.NewEndpoint())
+	srv.Register(transportupdate.NewEndpoint())
 	srv.Run()
 }

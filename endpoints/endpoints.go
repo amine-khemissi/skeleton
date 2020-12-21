@@ -6,30 +6,18 @@ import (
 	"github.com/amine-khemissi/skeleton/backbone/db"
 	"github.com/amine-khemissi/skeleton/backbone/db/mongo"
 	"github.com/amine-khemissi/skeleton/def"
-	"github.com/amine-khemissi/skeleton/def/count"
 	"github.com/amine-khemissi/skeleton/def/delete"
 	"github.com/amine-khemissi/skeleton/def/read"
 	"github.com/amine-khemissi/skeleton/def/update"
-	"github.com/amine-khemissi/skeleton/def/uppercase"
 	"github.com/amine-khemissi/skeleton/def/write"
-	count2 "github.com/amine-khemissi/skeleton/endpoints/count"
 	delete2 "github.com/amine-khemissi/skeleton/endpoints/delete"
 	read2 "github.com/amine-khemissi/skeleton/endpoints/read"
 	update2 "github.com/amine-khemissi/skeleton/endpoints/update"
-	upperCase2 "github.com/amine-khemissi/skeleton/endpoints/uppercase"
 	write2 "github.com/amine-khemissi/skeleton/endpoints/write"
 )
 
 type stringService struct {
 	DBInstance db.DB
-}
-
-//todo : modify or add endpoint that select or insert on the DB in order to test it
-func (s *stringService) Uppercase(ctx context.Context, req uppercase.Request) (uppercase.Response, error) {
-	return upperCase2.Uppercase(ctx, req)
-}
-func (s *stringService) Count(ctx context.Context, req count.Request) (count.Response, error) {
-	return count2.Count(ctx, req)
 }
 
 func (s *stringService) Write(ctx context.Context, req write.Request) (write.Response, error) {

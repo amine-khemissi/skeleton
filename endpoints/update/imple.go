@@ -2,9 +2,6 @@ package update
 
 import (
 	"context"
-	"crypto/md5"
-	"fmt"
-	"strconv"
 
 	"github.com/amine-khemissi/skeleton/backbone/db"
 	"github.com/amine-khemissi/skeleton/backbone/errorsklt"
@@ -15,19 +12,18 @@ import (
 func Update(ctx context.Context, instance db.DB, req update.Request) (update.Response, error) {
 	logger.Instance().Debug(ctx, "Update", req.Name, req.Age)
 
-	hash := fmt.Sprintf("%x", md5.Sum([]byte(req.Name+strconv.Itoa(req.Age))))
 	where := map[string]interface{}{
-		"ID": hash,
+		"ID": req.ClientID,
 	}
 	item := map[string]interface{}{}
-	if req.Age != -1 {
+	if req.Age != 0 {
 		item["age"] = req.Age
 	}
 	if req.Name != "" {
 		item["name"] = req.Name
 	}
 	if err := instance.UpdateOne(ctx, "people", where, item); err != nil {
-		return update.Response{}, errorsklt.Stack(err, "failed to insert new person")
+		return update.Response{}, errorsklt.Stack(err, "failed to update person", req.ClientID)
 	}
 	return update.Response{}, nil
 }

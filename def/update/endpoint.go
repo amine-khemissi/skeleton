@@ -1,8 +1,9 @@
 package update
 
 type Request struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	ClientID string `json:"-" path:"clientID"`
+	Name     string `json:"name"`
+	Age      int    `json:"age"`
 }
 
 type Response struct {

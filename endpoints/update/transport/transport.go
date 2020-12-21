@@ -6,8 +6,6 @@ import (
 
 	"github.com/amine-khemissi/skeleton/def/update"
 
-	"github.com/amine-khemissi/skeleton/def/write"
-
 	"github.com/amine-khemissi/skeleton/backbone/endpointimpl"
 
 	"github.com/amine-khemissi/skeleton/def"
@@ -18,7 +16,7 @@ type ep struct {
 }
 
 func (e ep) GetRequest() interface{} {
-	return &write.Request{}
+	return &update.Request{}
 }
 
 func NewEndpoint() endpointimpl.EndpointImpl {

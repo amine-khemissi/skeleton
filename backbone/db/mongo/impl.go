@@ -108,10 +108,10 @@ func (w *wrapper) InsertOne(ctx context.Context, collection string, item map[str
 }
 
 func (w *wrapper) UpdateOne(ctx context.Context, collection string, where map[string]interface{}, item map[string]interface{}) error {
-	//todo check how can I use the insertResult
-	_, err := w.db.Collection(collection).UpdateOne(ctx, where, item)
+	logger.Instance().Debug(ctx, collection, where, map[string]interface{}{"$set": item})
+	_, err := w.db.Collection(collection).UpdateOne(ctx, where, map[string]interface{}{"$set": item})
 	if err != nil {
-		return errorsklt.WithCode(errorsklt.Stack(err, "failed to insert one element in collection", collection), http.StatusInternalServerError)
+		return errorsklt.WithCode(errorsklt.Stack(err, "failed to update one element in collection", collection), http.StatusInternalServerError)
 	}
 	return nil
 }
