@@ -9,11 +9,13 @@ import (
 	"github.com/amine-khemissi/skeleton/def/count"
 	"github.com/amine-khemissi/skeleton/def/delete"
 	"github.com/amine-khemissi/skeleton/def/read"
+	"github.com/amine-khemissi/skeleton/def/update"
 	"github.com/amine-khemissi/skeleton/def/uppercase"
 	"github.com/amine-khemissi/skeleton/def/write"
 	count2 "github.com/amine-khemissi/skeleton/endpoints/count"
 	delete2 "github.com/amine-khemissi/skeleton/endpoints/delete"
 	read2 "github.com/amine-khemissi/skeleton/endpoints/read"
+	update2 "github.com/amine-khemissi/skeleton/endpoints/update"
 	upperCase2 "github.com/amine-khemissi/skeleton/endpoints/uppercase"
 	write2 "github.com/amine-khemissi/skeleton/endpoints/write"
 )
@@ -32,6 +34,10 @@ func (s *stringService) Count(ctx context.Context, req count.Request) (count.Res
 
 func (s *stringService) Write(ctx context.Context, req write.Request) (write.Response, error) {
 	return write2.Write(ctx, s.DBInstance, req)
+}
+
+func (s *stringService) Update(ctx context.Context, req update.Request) (update.Response, error) {
+	return update2.Update(ctx, s.DBInstance, req)
 }
 
 func (s *stringService) Read(ctx context.Context, req read.Request) (read.Response, error) {
